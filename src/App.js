@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import Trippletriad from './components/Trippletriad';
+import Footer from './components/Footer';
 
 class App extends Component {
   render() {
     return (
-      <Trippletriad />
+      <div>
+        <Trippletriad />
+        <Footer />
+      </div>
     );
   }
 }
