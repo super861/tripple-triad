@@ -1,36 +1,65 @@
 import React, { Component } from 'react';
 import Api from '../api/Api';
+import { connect } from 'react-redux';
+import { requestCards } from '../actions/index';
 
-class Trippletriad extends Component {
-  constructor(props) {
-    super(props)
+const mapStateToProps = state => {
+  return {
+    cards: state.cards
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    requestCards: () => dispatch(requestCards())
+  }
+}
+
+class ConnectedTrippletriad extends Component {
+  constructor() {
+    super();
 
     this.state = {};
   }
 
   componentDidMount() {
-    let hmm = null;
-    Api.getAllCards().then(data => {
+    this.props.requestCards().then(() => {
+      const {cards} = this.props
+      const cardList = [];
+      for (const key of Object.keys(cards)) {
+        cardList.push(cards[key]);
+      }
+
       this.setState({
-        cards: data.cards
+        cards: cardList
       })
-    })
+    });
+
+  }
+
+  renderCards() {
+    const {cards} = this.state;
+    return(
+      <div>
+        {cards.map(el => (
+          <img
+            src={Api.apiUrl() + el.url.neutral}
+            alt="card"
+          />
+        ))}
+      </div>
+    );
+
+
   }
 
 
   render() {
     if(this.state.cards) {
-      const {cards} = this.state
-      console.log(cards)
-      for (const key of Object.keys(cards)) {
-        console.log(key, cards[key].url);
-      }
-
       return(
         <div>
-
+          {this.renderCards()}
         </div>
-
       )
     }
     else {
@@ -41,5 +70,7 @@ class Trippletriad extends Component {
   }
 
 }
+
+const Trippletriad = connect(mapStateToProps, mapDispatchToProps)(ConnectedTrippletriad)
 
 export default Trippletriad;

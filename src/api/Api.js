@@ -1,12 +1,16 @@
 class Api {
   static getAllCards() {
-    return fetch('http://webtest.multiverseworks.com/triple-triad/game/cards')
+    return fetch(Api.apiUrl() + '/game/cards')
       .then(response => {
         return response.json();
-      }).then(data => {
-        return data;
+      }).catch(error => {
+        console.log(error);
       })
 
+  }
+
+  static apiUrl() {
+    return "http://webtest.multiverseworks.com/triple-triad/"
   }
 }
 
