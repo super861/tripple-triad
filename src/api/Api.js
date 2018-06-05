@@ -9,6 +9,15 @@ class Api {
 
   }
 
+  static startGame() {
+    return fetch(Api.apiUrl() + '/game/setup')
+      .then(response => {
+        return response.json();
+      }).catch(error => {
+        console.log(error)
+      })
+  }
+
   static apiUrl() {
     return "http://webtest.multiverseworks.com/triple-triad/"
   }

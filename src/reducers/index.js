@@ -14,6 +14,14 @@ const rootReducer = (state = initialState, action) => {
           ...action.data.cards
         }
       }
+    case types.START_GAME_SUCCESS:
+      return {
+        ...state,
+        game: {
+          ...state.game,
+          ...action.data.game
+        }
+      }
 
     default:
       return state;

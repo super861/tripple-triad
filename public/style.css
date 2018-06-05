@@ -1,0 +1,11 @@
+.container {
+  width: 1600px
+}
+
+.cards {
+	display: flex;
+}
+
+#board .cell {
+	min-height: 200px;
+}
