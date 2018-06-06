@@ -1,41 +1,44 @@
 import Api from '../api/Api';
 import * as types from './actionTypes'
+import {shouldFetchCards, loadCardsRequest, loadCardsSuccess, loadCardsFailure} from './cards';
+import {shouldFetchGame, startGameRequest, startGameSuccess, startGameFailure} from './game';
 
-export const requestCards = () => {
-  return (dispatch) => {
-    return Api.getAllCards().then(data => {
-      dispatch(loadCardsSuccess(data))
-    }).catch(error => {
-      console.log(error);
-    })
-  }
-}
 
-export const requestStartGame = () => {
-  return (dispatch) => {
-    return Api.startGame().then(data => {
-      dispatch(startGameSuccess(data))
-    }).catch(error => {
-      console.log(error)
-    })
-  }
-}
 
-const loadCardsSuccess = (_data) => {
-  return {
-    type: types.LOAD_CARDS_SUCCESS,
-    data: {
-      status: 'LOAD_CARDS_SUCCESFULL',
-      cards: _data.cards
+
+export const fetchData = (request) => {
+  return (dispatch, getState) => {
+    const state = getState();
+    let url = '/game/' + request;
+
+    if(request === 'cards' && shouldFetchCards(state)) {
+      dispatch(loadCardsRequest())
     }
-  }
-}
+    if(request === 'setup' && shouldFetchGame(state)) {
+      dispatch(startGameRequest())
+    }
 
-const startGameSuccess = (_data) => {
-  return {
-    type: types.START_GAME_SUCCESS,
-    data: {
-      game: _data
+    switch(request) {
+      case 'cards':
+        return Api.call(url, {
+          isFetching: getState().cards.isFetching
+        }).then(data => {
+          dispatch(loadCardsSuccess(data))
+        }).catch(error => {
+          dispatch(loadCardsFailure(error))
+        })
+      case 'setup':
+      return Api.call(url, {
+        isFetching: getState().game.isFetching
+      }).then(data => {
+        if(!getState().game.isFetching)
+          Promise.reject();
+        dispatch(startGameSuccess(data))
+      }).catch(error => {
+        dispatch(startGameFailure(error))
+      })
+      default:
+        break;
     }
   }
 }

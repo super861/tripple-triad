@@ -4,7 +4,7 @@ class Cell extends Component {
   render() {
     return(
       <div id={this.props.cellId} className="cell">
-        <img src={this.props.bg}  />
+        <img src={this.props.bg} alt="card"  />
       </div>
 
     );

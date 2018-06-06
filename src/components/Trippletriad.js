@@ -1,24 +1,11 @@
 import React, { Component } from 'react';
-import Api from '../api/Api';
 import { connect } from 'react-redux';
-import { requestCards, requestStartGame } from '../actions/index';
+import { fetchData } from '../actions/index';
 import Cell from './Cell';
+import { BASE_URL } from '../constants/constants';
+import Board from './Board'
 
-const mapStateToProps = state => {
-  return {
-    cards: state.cards,
-    game: state.game
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    requestCards: () => dispatch(requestCards()),
-    requestStartGame: () => dispatch(requestStartGame())
-  }
-}
-
-class ConnectedTrippletriad extends Component {
+class Trippletriad extends Component {
   constructor() {
     super();
 
@@ -29,74 +16,41 @@ class ConnectedTrippletriad extends Component {
   }
 
   componentDidMount() {
-    this.props.requestCards();
+    this.props.fetchData('cards');
 
   }
 
   renderCards() {
-    const {cards} = this.props
+    const {cards} = this.props.cards
     const cardList = [];
     for (const key of Object.keys(cards)) {
       cardList.push(cards[key]);
     }
 
     return(
-      <div className="cards">
+      <div className="cards container">
           {cardList.map((el, index) => (
-            <Cell bg={Api.apiUrl() + el.url.neutral} cellId={'card' + index} />
+            <Cell bg={BASE_URL + el.url.neutral} cellId={'card' + index} key={'card' + index} />
           ))}
       </div>
     );
   }
 
-  // <img
-  //   src={Api.apiUrl() + el.url.neutral}
-  //   alt="card"
-  // />
-
   renderGame() {
-    const {cards} = this.props;
-    const {board, deck, cpuCards} = this.props.game;
-    return(
-      <div className="container">
-        <div className="row">
-          <div className="col-md-2 border" id="handuser">
-            {deck.map((el, idx) => (
-              <Cell bg={Api.apiUrl() + cards[el].url.blue} cellId={'deck' + idx} key={'deck' + idx} />
-            ))}
-          </div>
-          <div className="col-md-6 offset-md-1 border" id="board">
-            {board.map((row, idx) => (
-              <div className="row">
-                {board[idx].map(cell => (
-                  <div className="col-md-4 border">
-                    <Cell />
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-          <div className="col-md-2 offset-md-1 border" id="handcpu">
-            {cpuCards.map((el, idx) => (
-              <Cell bg={Api.apiUrl() + cards[el].url.red} cellId={'cpuCards' + idx} key={'cpuCards' + idx} />
-            ))}
-          </div>
-        </div>
-      </div>
-
-
-    );
+    const {cards, game} = this.props;
+    return <Board cards={cards} game={game.game} />
   }
 
   showCardsOnClickHandler(e) {
+    this.props.fetchData('cards')
     this.setState({
       showCards: !this.state.showCards
     })
   }
 
   startGameOnclickHandler(e) {
-    this.props.requestStartGame().then(() => {
-      console.log('game started : ',  this.props.game)
+    this.props.fetchData('setup').then(() => {
+      //this.props.request('toss');
       this.setState({
         gameStart: true
       })
@@ -129,6 +83,18 @@ class ConnectedTrippletriad extends Component {
 
 }
 
-const Trippletriad = connect(mapStateToProps, mapDispatchToProps)(ConnectedTrippletriad)
+const mapStateToProps = state => {
+  const {cards, game} = state
+  return {
+    cards,
+    game
+  }
+}
 
-export default Trippletriad;
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchData: request => dispatch(fetchData(request))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Trippletriad)
