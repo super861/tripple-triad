@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchData } from '../actions/index';
+import { fetchCards, fetchSetup } from '../actions/index';
 import Cell from './Cell';
 import { BASE_URL } from '../constants/constants';
 import Board from './Board'
@@ -16,8 +16,7 @@ class Trippletriad extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchData('cards');
-
+    this.props.fetchCards();
   }
 
   renderCards() {
@@ -42,15 +41,13 @@ class Trippletriad extends Component {
   }
 
   showCardsOnClickHandler(e) {
-    this.props.fetchData('cards')
     this.setState({
       showCards: !this.state.showCards
     })
   }
 
   startGameOnclickHandler(e) {
-    this.props.fetchData('setup').then(() => {
-      //this.props.request('toss');
+    this.props.fetchSetup().then(() => {
       this.setState({
         gameStart: true
       })
@@ -93,7 +90,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchData: request => dispatch(fetchData(request))
+    fetchCards: () => dispatch(fetchCards()),
+    fetchSetup: () => dispatch(fetchSetup())
   }
 }
 
