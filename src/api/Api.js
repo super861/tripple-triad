@@ -20,13 +20,11 @@ class Api {
   }
 
   static init(options) {
+    console.log('options', options)
     const requestOptions = options || {}
     const _method = requestOptions.method || 'GET'
-    const body = requestOptions.body || null
-
-    // if(body) {
-    //   const _body = queryString.stringify(body)
-    // }
+    const _body = requestOptions.body || null
+    console.log('method', _method)
 
     if(_method === 'GET') {
       return {
@@ -34,10 +32,11 @@ class Api {
       }
     }
     else if(_method === 'POST') {
+      _body.code = requestOptions.code;
       console.log('post')
       return {
         method: _method,
-        body: queryString.stringify(body),
+        body: queryString.stringify(_body),
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       }
     }

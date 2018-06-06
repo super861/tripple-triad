@@ -1,7 +1,7 @@
 import * as types from './actionTypes'
 
 export const shouldFetchGame = state => {
-  const {game, isFetching} = state
+  const {game} = state
 
   if(!game) {
     return true;
@@ -15,23 +15,23 @@ export const shouldFetchGame = state => {
 
 }
 
-export const startGameRequest = () => {
+export const loadGameRequest = () => {
   return {
-    type: types.START_GAME_REQUEST
+    type: types.LOAD_GAME_REQUEST
   }
 }
 
-export const startGameSuccess = (data) => {
+export const loadGameSuccess = (data) => {
 
   return {
-    type: types.START_GAME_SUCCESS,
+    type: types.LOAD_GAME_SUCCESS,
     data
   }
 }
 
-export const startGameFailure = (error) => {
+export const loadGameFailure = (error) => {
   return {
-    type: types.START_GAME_FAILURE,
+    type: types.LOAD_GAME_FAILURE,
     error
   }
 }

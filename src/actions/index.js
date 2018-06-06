@@ -1,7 +1,6 @@
 import Api from '../api/Api';
-import * as types from './actionTypes'
 import {shouldFetchCards, loadCardsRequest, loadCardsSuccess, loadCardsFailure} from './cards';
-import {shouldFetchGame, startGameRequest, startGameSuccess, startGameFailure} from './game';
+import {shouldFetchGame, loadGameRequest, loadGameSuccess, loadGameFailure} from './game';
 
 export const fetchCards = () => {
   return (dispatch, getState) => {
@@ -19,58 +18,40 @@ export const fetchCards = () => {
   }
 }
 
-export const fetchSetup = () => {
+export const fetchGame = (action, _body = {}) => {
   return(dispatch, getState) => {
     if(shouldFetchGame(getState())) {
-      dispatch(startGameRequest())
+      dispatch(loadGameRequest())
     }
-
-    return Api.call('/game/setup', {
-      isFetching: getState().game.isFetching
-    }).then(data => {
-      if(!getState().game.isFetching)
-        Promise.reject();
-      dispatch(startGameSuccess(data))
-    }).catch(error => {
-      dispatch(startGameFailure(error))
-    })
+    if(action === 'setup') {
+      return Api.call('/game/setup', {
+        isFetching: getState().game.isFetching
+      }).then(data => {
+        dispatch(loadGameSuccess(data))
+      }).catch(error => {
+        dispatch(loadGameFailure(error))
+      })
+    }
+    else {
+      let url = '/game/' + action;
+      let state = getState();
+      return Api.call(url, {
+        method: 'POST',
+        body: _body,
+        code: state.game.game.code,
+        isFetching: state.game.isFetching
+      }).then(data => {
+        dispatch(loadGameSuccess(data))
+      }).catch(error => {
+        dispatch(loadGameFailure(error))
+      })
+    }
   }
+
 }
 
 
-// export const fetchData = (request) => {
-//   return (dispatch, getState) => {
-//     const state = getState();
-//     let url = '/game/' + request;
-//
-//     if(request === 'cards' && shouldFetchCards(state)) {
-//       dispatch(loadCardsRequest())
-//     }
-//     if(request === 'setup' && shouldFetchGame(state)) {
-//       dispatch(startGameRequest())
-//     }
-//
-//     switch(request) {
-//       case 'cards':
-//         return Api.call(url, {
-//           isFetching: getState().cards.isFetching
-//         }).then(data => {
-//           dispatch(loadCardsSuccess(data))
-//         }).catch(error => {
-//           dispatch(loadCardsFailure(error))
-//         })
-//       case 'setup':
-//       return Api.call(url, {
-//         isFetching: getState().game.isFetching
-//       }).then(data => {
-//         if(!getState().game.isFetching)
-//           Promise.reject();
-//         dispatch(startGameSuccess(data))
-//       }).catch(error => {
-//         dispatch(startGameFailure(error))
-//       })
-//       default:
-//         break;
-//     }
-//   }
+
+// export const tosscoin = () => {
+//   return (dispatch, getState)
 // }

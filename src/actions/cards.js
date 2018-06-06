@@ -1,7 +1,7 @@
 import * as types from './actionTypes'
 
 export const shouldFetchCards = state => {
-  const {cards, isFetching} = state
+  const {cards} = state
 
   if(!cards) {
     return true;

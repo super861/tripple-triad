@@ -5,20 +5,21 @@ export default function cards(state = {
   game: {}
 }, action) {
   switch(action.type) {
-    case types.START_GAME_REQUEST:
+    case types.LOAD_GAME_REQUEST:
       return {
         ...state,
         isFetching: true
       }
-    case types.START_GAME_SUCCESS:
+    case types.LOAD_GAME_SUCCESS:
       return {
         ...state,
         isFetching: false,
         game: {
+          ...state.game,
           ...action.data
         }
       }
-    case types.START_GAME_FAILURE:
+    case types.LOAD_GAME_FAILURE:
       return {
         ...state,
         isFetching: false,
