@@ -16,7 +16,6 @@ class Board extends Component {
   }
   generateCell(cell, y, x) {
     const {cards} = this.props.cards
-    console.log(cell)
     switch(cell[0]) {
       case 1:
         return <Cell bg={BASE_URL + cards[cell[1]].url.blue} cellId={'x' + x + 'y' + y} />
@@ -40,7 +39,6 @@ class Board extends Component {
         x: _x,
         y: _y
       }).then(() => {
-      //  this.props.fetchGame('whose-turn')
         this.setState({
           cardSelected: null,
           card: null
@@ -75,7 +73,6 @@ class Board extends Component {
 
   doCpuOnClickHandler() {
     this.props.fetchGame('do-cpu').then(() => {
-    //  this.props.fetchGame('whose-turn')
     })
   }
 
@@ -83,6 +80,7 @@ class Board extends Component {
 
     const {cards} = this.props.cards;
     const {board, hand, cpuCards, turn, status, back} = this.props.game;
+
     return(
       <div className="container">
         <div className="row justify-content-center">
@@ -102,17 +100,17 @@ class Board extends Component {
           </div>
 
           <div className="col-md-6 offset-md-1" id="board">
-            {board.map((row, idx) => (
-              <div className="row" key={'boardrow' + idx}>
-                {board[idx].map((cell, index) => (
-                  <div className="col-md-4 border" key={'row'+idx+'cell'+index}>
-                    {this.generateCell(cell, idx, index)}
+            {board.map((row, y) => (
+              <div className="row" key={'boardrow' + y}>
+                {board[y].map((cell, x) => (
+                  <div className="col-md-4 border" key={'row'+y+'cell'+x}>
+                    {this.generateCell(cell, y, x)}
                   </div>
                 ))}
               </div>
             ))}
           </div>
-          
+
           <div className="col-md-2 offset-md-1" id="handcpu">
             {cpuCards.map((el, idx) => (
               el > 0 ? <Cell bg={BASE_URL + back} cellId={'cpuCards' + idx} key={'cpuCards' + idx} /> : <Cell key={'cpuCards' + idx} />

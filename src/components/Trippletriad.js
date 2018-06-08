@@ -40,6 +40,12 @@ class Trippletriad extends Component {
     return <Board cards={cards} game={game.game} />
   }
 
+  renderCoinToss() {
+    return (
+      <h2>  HOI IK BEN EEN COIN TOS!</h2>
+    );
+  }
+
   showCardsOnClickHandler(e) {
     this.setState({
       showCards: !this.state.showCards
@@ -48,9 +54,13 @@ class Trippletriad extends Component {
 
   startGameOnclickHandler(e) {
     this.props.fetchGame('setup').then(() => {
+      // this.setState({
+      //   coinToss: true
+      // })
       this.props.fetchGame('toss-coin').then(() => {
           this.setState({
-            gameStart: true
+            gameStart: true,
+            coinToss: false
           })
 
       })
@@ -83,6 +93,7 @@ class Trippletriad extends Component {
           {this.state.showCards && this.renderCards()}
           <button className="btn btn-success m-5 gamestart" onClick={this.startGameOnclickHandler.bind(this)} disabled={this.state.gameStart}>Start game</button>
           <button className="btn btn-danger m-5 gamereset" onClick={this.resetGameOnClickHandler.bind(this)} disabled={!this.state.gameStart}>Reset game</button>
+          {this.state.coinToss && this.renderCoinToss()}
           {this.state.gameStart && this.renderGame()}
         </div>
       )
