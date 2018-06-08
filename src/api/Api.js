@@ -4,14 +4,19 @@ import queryString from 'query-string';
 class Api {
   static call(url, options) {
 
-
-    console.log(BASE_URL + url)
     const init = Api.init(options);
     return fetch(BASE_URL + url, init)
       .then(response => response.json(), (error) => {
         return Promise.reject(error)
       })
       .then((json) => {
+        if(json.debug) {
+          console.log('DEBUG', json.debug)
+        }if(json.status) {
+          console.log('STATUS ++++++++', json.status, '++++++++')
+        }if(json.error) {
+          console.log('ERROR ++++++++', json.error, '++++++++')
+        }
         if(options.isFetching)
           return Promise.resolve(json)
         else
@@ -20,11 +25,10 @@ class Api {
   }
 
   static init(options) {
-    console.log('options', options)
     const requestOptions = options || {}
     const _method = requestOptions.method || 'GET'
-    const _body = requestOptions.body || null
-    console.log('method', _method)
+    const _body = requestOptions.body || {}
+
 
     if(_method === 'GET') {
       return {
@@ -32,8 +36,17 @@ class Api {
       }
     }
     else if(_method === 'POST') {
-      _body.code = requestOptions.code;
-      console.log('post')
+      if(requestOptions.code)
+        _body.code = requestOptions.code
+        _body.inverted = true
+        _body.debug = true
+        _body['playerDebug[0]'] = 4
+        _body['playerDebug[1]'] = 4
+        _body['playerDebug[2]'] = 4
+        _body['playerDebug[3]'] = 7
+        _body['playerDebug[4]'] = 7
+
+      console.log('post', _body)
       return {
         method: _method,
         body: queryString.stringify(_body),

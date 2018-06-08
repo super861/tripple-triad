@@ -14,7 +14,7 @@ class Board extends Component {
     };
 
   }
-  generateCell(cell, x, y) {
+  generateCell(cell, y, x) {
     const {cards} = this.props.cards
     switch(cell[0]) {
       case 1:
@@ -29,18 +29,17 @@ class Board extends Component {
   cellOnClickHandler(e) {
     const {cardSelected} = this.state;
     const {id} = e.target;
+    const {turn} = this.props.game;
+    console.log(turn)
     let _x = id.slice(1, 2);
     let _y = id.slice(3, 4);
-    console.log(cardSelected)
-    if(cardSelected !== null) {
+    if(cardSelected !== null && turn === 'player') {
       this.props.fetchGame('do-player', {
         card: cardSelected,
         x: _x,
         y: _y
       }).then(() => {
-        this.props.fetchGame('do-cpu').then(() => {
-          this.props.fetchGame('whose-turn')
-        })
+      //  this.props.fetchGame('whose-turn')
         this.setState({
           cardSelected: null,
           card: null
@@ -51,37 +50,51 @@ class Board extends Component {
 
   cardOnClickHandler(e) {
     const {cardSelected} = this.state;
-    const {deck} = this.props.game;
+    const {hand, turn} = this.props.game;
     const id = Number(e.target.id);
 
-    if(cardSelected !== id) {
-      this.setState({
-        cardSelected: id,
-        card: deck[id]
-      })
+    if(turn === 'player') {
+      if(cardSelected !== id) {
+        this.setState({
+          cardSelected: id,
+          card: hand[id]
+        })
+      }
+      else {
+        this.setState({
+          cardSelected: null,
+          card: null
+        })
+      }
     }
     else {
-      this.setState({
-        cardSelected: null,
-        card: null
-      })
+      console.log('it is not your turn!');
     }
+  }
 
+  doCpuOnClickHandler() {
+    this.props.fetchGame('do-cpu').then(() => {
+    //  this.props.fetchGame('whose-turn')
+    })
   }
 
   render() {
 
     const {cards} = this.props.cards;
-    const {board, deck, cpuCards, turn} = this.props.game;
+    const {board, hand, cpuCards, turn, status, back} = this.props.game;
     return(
       <div className="container">
         <div className="row justify-content-center">
           <h3>Turn: {turn}</h3>
+          {turn === 'cpu' && <button onClick={this.doCpuOnClickHandler.bind(this)}>do cpu turn</button>}
+        </div>
+        <div className="row justify-content-center">
+          <h3>Status: {status}</h3>
         </div>
         <div className="row">
           <div className="col-md-2 border" id="handuser">
-            {deck.map((el, idx) => (
-              el > 0 ? <Cell bg={BASE_URL + cards[el].url.blue} cellId={'deck' + idx} key={'deck' + idx} onClick={this.cardOnClickHandler.bind(this)} cardId={idx} /> : <Cell key={'deck' + idx} />
+            {hand.map((el, idx) => (
+              el > 0 ? <Cell bg={BASE_URL + cards[el].url.blue} cellId={'hand' + idx} key={'hand' + idx} onClick={this.cardOnClickHandler.bind(this)} cardId={idx} /> : <Cell key={'hand' + idx} />
             ))}
           </div>
           <div className="col-md-6 offset-md-1 border" id="board">
@@ -97,7 +110,7 @@ class Board extends Component {
           </div>
           <div className="col-md-2 offset-md-1 border" id="handcpu">
             {cpuCards.map((el, idx) => (
-              el > 0 ? <Cell bg={BASE_URL + cards[el].url.red} cellId={'cpuCards' + idx} key={'cpuCards' + idx} /> : <Cell key={'cpuCards' + idx} />
+              el > 0 ? <Cell bg={BASE_URL + back} cellId={'cpuCards' + idx} key={'cpuCards' + idx} /> : <Cell key={'cpuCards' + idx} />
             ))}
           </div>
         </div>

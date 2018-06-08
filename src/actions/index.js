@@ -18,14 +18,17 @@ export const fetchCards = () => {
   }
 }
 
-export const fetchGame = (action, _body = {}) => {
+export const fetchGame = (_action, _body = {}) => {
   return(dispatch, getState) => {
+    console.log('REQUEST SENT ++++++++', _action, '++++++++')
     if(shouldFetchGame(getState())) {
       dispatch(loadGameRequest())
     }
-    if(action === 'setup') {
+    if(_action === 'setup') {
       return Api.call('/game/setup', {
-        isFetching: getState().game.isFetching
+        method: 'POST',
+        isFetching: getState().game.isFetching,
+        action: _action
       }).then(data => {
         dispatch(loadGameSuccess(data))
       }).catch(error => {
@@ -33,13 +36,14 @@ export const fetchGame = (action, _body = {}) => {
       })
     }
     else {
-      let url = '/game/' + action;
+      let url = '/game/' + _action;
       let state = getState();
       return Api.call(url, {
         method: 'POST',
         body: _body,
         code: state.game.game.code,
-        isFetching: state.game.isFetching
+        isFetching: state.game.isFetching,
+        action: _action
       }).then(data => {
         dispatch(loadGameSuccess(data))
       }).catch(error => {
@@ -49,9 +53,3 @@ export const fetchGame = (action, _body = {}) => {
   }
 
 }
-
-
-
-// export const tosscoin = () => {
-//   return (dispatch, getState)
-// }

@@ -49,18 +49,9 @@ class Trippletriad extends Component {
   startGameOnclickHandler(e) {
     this.props.fetchGame('setup').then(() => {
       this.props.fetchGame('toss-coin').then(() => {
-        if(this.props.game.game.turn === 'cpu') {
-          console.log('CPU TAKEN TURN')
-          this.props.fetchGame('do-cpu').then(() => {
-            this.setState({
-              gameStart: true
-            })
-          })
-        } else {
           this.setState({
             gameStart: true
           })
-        }
 
       })
     }).catch(() => {
@@ -73,7 +64,7 @@ class Trippletriad extends Component {
   render() {
     if(this.props.cards) {
       return(
-        <div>
+        <div className="main">
           <button className="btn btn-primary m-5 showcards" onClick={this.showCardsOnClickHandler.bind(this)}>Show cards</button>
           {this.state.showCards && this.renderCards()}
           <button className="btn btn-success m-5 gamestart" onClick={this.startGameOnclickHandler.bind(this)} disabled={this.state.gameStart}>Start game</button>
