@@ -16,6 +16,7 @@ class Board extends Component {
   }
   generateCell(cell, y, x) {
     const {cards} = this.props.cards
+    console.log(cell)
     switch(cell[0]) {
       case 1:
         return <Cell bg={BASE_URL + cards[cell[1]].url.blue} cellId={'x' + x + 'y' + y} />
@@ -88,16 +89,19 @@ class Board extends Component {
           <h3>Turn: {turn}</h3>
           {turn === 'cpu' && <button onClick={this.doCpuOnClickHandler.bind(this)}>do cpu turn</button>}
         </div>
+
         <div className="row justify-content-center">
           <h3>Status: {status}</h3>
         </div>
+
         <div className="row">
-          <div className="col-md-2 border" id="handuser">
+          <div className="col-md-2" id="handuser">
             {hand.map((el, idx) => (
               el > 0 ? <Cell bg={BASE_URL + cards[el].url.blue} cellId={'hand' + idx} key={'hand' + idx} onClick={this.cardOnClickHandler.bind(this)} cardId={idx} /> : <Cell key={'hand' + idx} />
             ))}
           </div>
-          <div className="col-md-6 offset-md-1 border" id="board">
+
+          <div className="col-md-6 offset-md-1" id="board">
             {board.map((row, idx) => (
               <div className="row" key={'boardrow' + idx}>
                 {board[idx].map((cell, index) => (
@@ -108,7 +112,8 @@ class Board extends Component {
               </div>
             ))}
           </div>
-          <div className="col-md-2 offset-md-1 border" id="handcpu">
+          
+          <div className="col-md-2 offset-md-1" id="handcpu">
             {cpuCards.map((el, idx) => (
               el > 0 ? <Cell bg={BASE_URL + back} cellId={'cpuCards' + idx} key={'cpuCards' + idx} /> : <Cell key={'cpuCards' + idx} />
             ))}

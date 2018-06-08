@@ -40,11 +40,11 @@ class Api {
         _body.code = requestOptions.code
         _body.inverted = true
         _body.debug = true
-        _body['playerDebug[0]'] = 4
-        _body['playerDebug[1]'] = 4
-        _body['playerDebug[2]'] = 4
-        _body['playerDebug[3]'] = 7
-        _body['playerDebug[4]'] = 7
+        // _body['playerDebug[0]'] = 4
+        // _body['playerDebug[1]'] = 4
+        // _body['playerDebug[2]'] = 4
+        // _body['playerDebug[3]'] = 7
+        // _body['playerDebug[4]'] = 7
 
       console.log('post', _body)
       return {
