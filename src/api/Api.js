@@ -26,6 +26,7 @@ class Api {
 
   static init(options) {
     const requestOptions = options || {}
+    const setupOptions = requestOptions.setupOptions || {}
     const _method = requestOptions.method || 'GET'
     const _body = requestOptions.body || {}
 
@@ -39,7 +40,12 @@ class Api {
       if(requestOptions.code)
         _body.code = requestOptions.code
         _body.inverted = true
-        _body.debug = true
+        if(setupOptions.debug === "debugOn")
+          _body.debug = true
+        if(setupOptions.combo === "comboOn")
+          _body['rules[0]'] = 'combo'
+
+
         // _body['playerDebug[0]'] = 15
         // _body['playerDebug[1]'] = 15
         // _body['playerDebug[2]'] = 15
@@ -51,7 +57,6 @@ class Api {
         // _body['cpuDebug[3]'] = 15
         // _body['cpuDebug[4]'] = 15
 
-      console.log('post', _body)
       return {
         method: _method,
         body: queryString.stringify(_body),

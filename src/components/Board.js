@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
+import {BASE_URL} from '../constants/constants';
 import Cell from './Cell';
-import { BASE_URL } from '../constants/constants';
 import { connect } from 'react-redux';
 import { fetchGame } from '../actions/index';
+import Sound from 'react-sound';
 
 class Board extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
 
     this.state = {
       cardSelected: null,
@@ -14,8 +15,9 @@ class Board extends Component {
     };
 
   }
+
   generateCell(cell, y, x) {
-    const {cards} = this.props.cards
+    const {cards} = this.props;
     switch(cell[0]) {
       case 1:
         return <Cell bg={BASE_URL + cards[cell[1]].url.blue} cellId={'x' + x + 'y' + y} />
@@ -30,7 +32,6 @@ class Board extends Component {
     const {cardSelected} = this.state;
     const {id} = e.target;
     const {turn} = this.props.game;
-    console.log(turn)
     let _x = id.slice(1, 2);
     let _y = id.slice(3, 4);
     if(cardSelected !== null && turn === 'player') {
@@ -71,56 +72,53 @@ class Board extends Component {
     }
   }
 
-  doCpuOnClickHandler() {
-    this.props.fetchGame('do-cpu').then(() => {
-    })
-  }
+
+
 
   render() {
-
-    const {cards} = this.props.cards;
-    const {board, hand, cpuCards, turn, status, back} = this.props.game;
+    const {cards} = this.props;
+    const {board, hand, cpuCards, back} = this.props.game;
 
     return(
-      <div className="container">
-        <div className="row justify-content-center">
-          <h3>Turn: {turn}</h3>
-          {turn === 'cpu' && <button onClick={this.doCpuOnClickHandler.bind(this)}>do cpu turn</button>}
-        </div>
+      <div className="main">
+        {this.props.music === "musicOn" &&
+          <Sound
+          url="ShuffleOrBoogie.ogg"
+          playStatus={Sound.status.PLAYING}
+          loop={true}
+        />}
+        <div className="container">
+          <div className="row">
+            <div id="hand-user">
+              {hand.map((el, idx) => (
+                el > 0 ? <Cell bg={BASE_URL + cards[el].url.blue} cellId={'hand' + idx} key={'hand' + idx} onClick={this.cardOnClickHandler.bind(this)} cardId={idx} selected={this.state.cardSelected === idx} /> : <Cell key={'hand' + idx} />
+              ))}
+            </div>
 
-        <div className="row justify-content-center">
-          <h3>Status: {status}</h3>
-        </div>
-
-        <div className="row">
-          <div className="col-md-2" id="handuser">
-            {hand.map((el, idx) => (
-              el > 0 ? <Cell bg={BASE_URL + cards[el].url.blue} cellId={'hand' + idx} key={'hand' + idx} onClick={this.cardOnClickHandler.bind(this)} cardId={idx} /> : <Cell key={'hand' + idx} />
-            ))}
-          </div>
-
-          <div className="col-md-6 offset-md-1" id="board">
-            {board.map((row, y) => (
-              <div className="row" key={'boardrow' + y}>
-                {board[y].map((cell, x) => (
-                  <div className="col-md-4 border" key={'row'+y+'cell'+x}>
-                    {this.generateCell(cell, y, x)}
+            <div id="board">
+              <div className="container">
+                {board.map((row, y) => (
+                  <div className="row" key={'boardrow' + y}>
+                    {board[y].map((cell, x) => (
+                      <div className="col-md-4 border" key={'row'+y+'cell'+x}>
+                        {this.generateCell(cell, y, x)}
+                      </div>
+                    ))}
                   </div>
                 ))}
               </div>
-            ))}
-          </div>
+            </div>
 
-          <div className="col-md-2 offset-md-1" id="handcpu">
-            {cpuCards.map((el, idx) => (
-              el > 0 ? <Cell bg={BASE_URL + back} cellId={'cpuCards' + idx} key={'cpuCards' + idx} /> : <Cell key={'cpuCards' + idx} />
-            ))}
+            <div id="hand-cpu">
+              {cpuCards.map((el, idx) => (
+                el > 0 ? <Cell bg={BASE_URL + back} cellId={'cpuCards' + idx} key={'cpuCards' + idx} /> : <Cell key={'cpuCards' + idx} />
+              ))}
+            </div>
           </div>
         </div>
       </div>
     );
   }
-
 }
 
 const mapDispatchToProps = dispatch => {

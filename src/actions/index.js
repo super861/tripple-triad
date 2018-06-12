@@ -28,7 +28,8 @@ export const fetchGame = (_action, _body = {}) => {
       return Api.call('/game/setup', {
         method: 'POST',
         isFetching: getState().game.isFetching,
-        action: _action
+        action: _action,
+        setupOptions: getState().setup.options
       }).then(data => {
         dispatch(loadGameSuccess(data))
       }).catch(error => {
@@ -43,6 +44,7 @@ export const fetchGame = (_action, _body = {}) => {
         body: _body,
         code: state.game.game.code,
         isFetching: state.game.isFetching,
+        setupOptions: state.setup.options,
         action: _action
       }).then(data => {
         dispatch(loadGameSuccess(data))

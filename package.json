@@ -1,13 +1,15 @@
 {
-  "name": "tripple-triad",
+  "name": "my-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "query-string": "^6.1.0",
+    "immutability-helper": "^2.7.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
+    "react-modal": "^3.4.5",
     "react-redux": "^5.0.7",
     "react-scripts": "1.1.4",
+    "react-sound": "^1.2.0",
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0"

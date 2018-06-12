@@ -1,16 +1,15 @@
-import React, { Component } from 'react';
-import Trippletriad from './components/Trippletriad';
-import Footer from './components/Footer';
+import React from 'react';
+import TrippleTriad from './containers/TrippleTriad';
 
-class App extends Component {
-  render() {
-    return (
-      <div>
-        <Trippletriad />
-        <Footer />
-      </div>
-    );
-  }
+const App = () => {
+  return (
+    <div>
+      <TrippleTriad />
+    </div>
+
+  )
 }
 
 export default App;
+
+//api={new Api()}

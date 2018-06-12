@@ -22,7 +22,6 @@ export const loadGameRequest = () => {
 }
 
 export const loadGameSuccess = (data) => {
-
   return {
     type: types.LOAD_GAME_SUCCESS,
     data
