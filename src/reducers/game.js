@@ -25,6 +25,14 @@ export default function cards(state = {
         isFetching: false,
         error: action.error
       }
+    case types.SET_STATUS_NEW:
+      return {
+        ...state,
+        game: {
+          ...state.game,
+          status: action.status
+        }
+      }
     default:
       return state;
   }

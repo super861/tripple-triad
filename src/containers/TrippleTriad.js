@@ -4,16 +4,12 @@ import React, { Component } from 'react';
 import Header from '../components/Header';
 import Board from '../components/Board';
 import Footer from '../components/Footer';
+import Modal from '../components/Modal';
 //import actions
 import { fetchCards, fetchGame } from '../actions/index';
+import { setStatusNew } from '../actions/game';
 //import connect to connect redux and react
 import { connect } from 'react-redux';
-
-import ReactModal from "react-modal"; // React Modal, source: https://www.npmjs.com/package/react-modal manual: http://reactcommunity.org/react-modal/
-import ModalContent from "../components/ModalContent";
-
-//for the Modal!
-ReactModal.setAppElement('body');
 
 /**
 * This class is parent component for all the user-defined React components that make up the whole View.
@@ -23,7 +19,8 @@ class TrippleTriad extends Component {
     super();
     this.state = {
       showSetup: true,
-      toggleReset: false
+      toggleReset: false,
+      closedGameOver: false,
     }
   }
 
@@ -36,9 +33,38 @@ class TrippleTriad extends Component {
 
   }
 
+  componentDidUpdate() {
+    const {status} = this.props.game.game;
+    /* Reset the closedGameOver boolean after a game over with reset
+     * this cannot be done in the reset/setup, only after a status change from won/lost/draw to playing */
+    if (status === "playing" && this.state.closedGameOver){
+        this.setState({
+          closedGameOver: false
+        });
+    }
+  }
+
+  showGameOverModalCheck() {
+    const {status} = this.props.game.game;
+    // Check if the modal should be opened
+    if((status === "won" || status === "lost" || status === "draw") && !this.state.closedGameOver) {
+      // game ended and the player did not close the modal already
+      return true;
+    } else {
+      // status is not defined or 'playing'
+      return false;
+    }
+  }
+
   toggleResetHandler() {
     this.setState({
       toggleReset: !this.state.toggleReset
+    })
+  }
+
+  closeGameOverHandler() {
+    this.setState({
+      closedGameOver: true
     })
   }
 
@@ -51,27 +77,38 @@ class TrippleTriad extends Component {
 
   renderSetup() {
     return (
-      <ReactModal isOpen={this.state.showSetup}  contentLabel="Help Modal" className="Modal" overlayClassName="Overlay">
-        <ModalContent
+      <Modal
           title="Tripple Triad Setup"
           id="setup"
           button2={{click: this.gameStartHandler.bind(this), value: "Start game"}}
-        />
-      </ReactModal>
+      />
     )
   }
 
   renderReset() {
     return(
-      <ReactModal isOpen={this.state.toggleReset} onRequestClose={this.toggleResetHandler.bind(this)} contentLabel="Help Modal" className="Modal" overlayClassName="Overlay">
-        <ModalContent
+      <Modal
           close={this.toggleResetHandler.bind(this)}
-          title="About Tripple Triad"
+          title="Reset Game"
           id="reset"
           button1={{click: this.toggleResetHandler.bind(this), value: "Close"}}
           button2={{click: this.gameResetHandler.bind(this), value: "Reset game"}}
-        />
-      </ReactModal>
+      />
+    )
+  }
+
+  renderGameOver() {
+    const {status} = this.props.game.game;
+
+    return(
+      <Modal
+          close={this.closeGameOverHandler.bind(this)}
+          title="Game Over"
+          id="game-over"
+          button1={{click: this.closeGameOverHandler.bind(this), value: "Close"}}
+          button2={{click: this.gameOverHandler.bind(this), value: "Yes, play again!"}}
+          status={status}
+      />
     )
   }
 
@@ -83,10 +120,20 @@ class TrippleTriad extends Component {
   }
 
   gameResetHandler() {
+    this.props.setStatusNew('Waiting for turn');
     this.setState({
       toggleReset: !this.state.toggleReset,
       gameStart: !this.state.gameStart,
-      showSetup: !this.state.showSetup
+      showSetup: !this.state.showSetup,
+    })
+  }
+
+  gameOverHandler() {
+    this.props.setStatusNew('Waiting for turn');
+    this.setState({
+      gameStart: !this.state.gameStart,
+      showSetup: !this.state.showSetup,
+      closedGameOver: true
     })
   }
 
@@ -128,8 +175,9 @@ class TrippleTriad extends Component {
             doCpu={this.doCpuOnClickHandler.bind(this)}
             />
           {this.state.gameStart ? this.renderGame() : this.renderTemp()}
-          {this.renderSetup()}
-          {this.renderReset()}
+          {this.state.showSetup && this.renderSetup()}
+          {this.state.toggleReset && this.renderReset()}
+          {this.showGameOverModalCheck() && this.renderGameOver()}
           <Footer />
         </div>
       );
@@ -157,7 +205,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchCards: () => dispatch(fetchCards()),
-    fetchGame: (action, body) => dispatch(fetchGame(action, body))
+    fetchGame: (action, body) => dispatch(fetchGame(action, body)),
+    setStatusNew: (status) => dispatch(setStatusNew(status))
   }
 }
 

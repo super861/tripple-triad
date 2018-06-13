@@ -34,3 +34,10 @@ export const loadGameFailure = (error) => {
     error
   }
 }
+
+export const setStatusNew = (status) => {
+  return {
+    type: types.SET_STATUS_NEW,
+    status
+  }
+}

@@ -9,7 +9,7 @@ body { background-color: #2b0200; color: #fff; }
 /*+++++ GENERAL +++++*/
 /*++++++++++++++++++*/
 .cell { min-height: 126px; }
-
+button:focus { outline: none; }
 
 /*+++++ HEADER +++++*/
 /*++++++++++++++++++*/
@@ -19,16 +19,17 @@ header button.help { float: right; }
 header .col-md-6 { text-align: center; }
 
 /* modals */
-.Overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.75); }
-.Modal { color: #000; text-align: center; }
-.Modal p { max-width: 650px; margin: 0 auto; }
-.Modal strong { margin-bottom: 10px; display: block; font-size: 1.4rem; }
-.Modal p:not(:first-child) strong { margin-top: 30px; }
-.Modal #help { max-width: 1400px; }
-.Modal .modal-content { background: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.95)), url("bg.jpg") center center/cover no-repeat; }
-.Modal .modal-header {border-bottom: 3px solid #2b0200; }
-.Modal .modal-header h5 { color: #2b0200; font-weight: bold; }
-.Modal .modal-footer { border-top: 3px solid #2b0200; }
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.75); z-index: 1050;  }
+.custom-modal { position: fixed; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; outline: 0; }
+.custom-modal { color: #000; text-align: center; }
+.custom-modal p { max-width: 650px; margin: 0 auto; }
+.custom-modal strong { margin-bottom: 10px; display: block; font-size: 1.4rem; }
+.custom-modal p:not(:first-child) strong { margin-top: 30px; }
+.custom-modal #help { max-width: 1400px; }
+.custom-modal .modal-content { background: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.95)), url("bg.jpg") center center/cover no-repeat; }
+.custom-modal .modal-header {border-bottom: 3px solid #2b0200; }
+.custom-modal .modal-header h5 { color: #2b0200; font-weight: bold; }
+.custom-modal .modal-footer { border-top: 3px solid #2b0200; }
 
 /* show deck */
 .cards { display: flex;	align-items: center; justify-content: center; }

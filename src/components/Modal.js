@@ -4,7 +4,7 @@ import Cell from './Cell';
 import { setOptions } from '../actions/setup';
 import { connect } from 'react-redux';
 
-class ModalContent extends Component {
+class Modal extends Component {
   constructor() {
     super()
 
@@ -117,6 +117,25 @@ class ModalContent extends Component {
     )
   }
 
+  renderGameOver(status) {
+    const result = status === "draw" ? "It's a draw!" : `You ${status}!`;
+    return(
+      <div>
+        <p><strong>{result}</strong></p>
+        <p><strong>Do you want to play again?</strong></p>
+      </div>
+    )
+  }
+
+  renderReset() {
+    return (
+      <div>
+        <p>Do you want to cancel the current game and start a new game?</p>
+      </div>
+    )
+  }
+
+
   renderDefault() {
     return (
       <h1> default body </h1>
@@ -131,25 +150,29 @@ class ModalContent extends Component {
   render() {
     const {id} = this.props
     return(
-      <div id={this.props.id} className="modal-dialog">
-         <div className="modal-content">
-           {/* MODAL HEADER*/}
-           <div className="modal-header">
-             <h5 className="modal-title" id="exampleModalLabel">{this.props.title}</h5>
-             {this.props.close &&<button type="button" className="close" onClick={this.props.close}>
-               <span aria-hidden="true">&times;</span>
-             </button>}
+      <div className="modal-overlay">
+        <div className="custom-modal">
+          <div id={this.props.id} className="modal-dialog">
+             <div className="modal-content">
+               {/* MODAL HEADER*/}
+               <div className="modal-header">
+                 <h5 className="modal-title" id="exampleModalLabel">{this.props.title}</h5>
+                 {this.props.close &&<button type="button" className="close" onClick={this.props.close}>
+                   <span aria-hidden="true">&times;</span>
+                 </button>}
+               </div>
+               {/* MODAL BODY*/}
+               <div className="modal-body">
+               {id === "help" ? this.renderHelp() : id==="setup" ? this.renderSetup() : id==="game-over" ? this.renderGameOver(this.props.status) : id==="reset" ? this.renderReset() : this.renderDefault()}
+               </div>
+               {/* MODAL FOOTER*/}
+               <div className="modal-footer">
+                 {this.props.button1 && <button type="button" className="btn btn-secondary" onClick={this.props.button1.click}>{this.props.button1.value}</button>}
+                 {this.props.button2 && <button type="button" className="btn btn-success"onClick={this.button2OnClickHandler.bind(this)} style={this.props.button2.style}>{this.props.button2.value}</button>}
+               </div>
+             </div>
            </div>
-           {/* MODAL BODY*/}
-           <div className="modal-body">
-           {id === "help" ? this.renderHelp() : id==="setup" ? this.renderSetup() :this.renderDefault()}
-           </div>
-           {/* MODAL FOOTER*/}
-           <div className="modal-footer">
-             {this.props.button1 && <button type="button" className="btn btn-secondary" onClick={this.props.button1.click}>{this.props.button1.value}</button>}
-             {this.props.button2 && <button type="button" className="btn btn-success"onClick={this.button2OnClickHandler.bind(this)} style={this.props.button2.style}>{this.props.button2.value}</button>}
-           </div>
-         </div>
+          </div>
        </div>
     );
   }
@@ -161,4 +184,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(ModalContent);
+export default connect(null, mapDispatchToProps)(Modal);
