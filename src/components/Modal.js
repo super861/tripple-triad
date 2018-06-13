@@ -31,10 +31,11 @@ class Modal extends Component {
             ))}
         </div>
         <p><strong>What is Tripple Triad?</strong></p>
-        <p>Tripple Triad is a funny strategic card game.</p>
+        <p>Tripple Triad is a card game originating from Final Fantasy VIII.</p>
         <p><strong>How to play?</strong></p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <p> In the game two players face off against one another, one side playing as "blue", the other as "red" on a 3x3 grid.
+          Each player has five cards in a hand and the aim is to capture the opponent's cards by turning them into the player's own color of red or blue. </p>
+        <a href="http://finalfantasy.wikia.com/wiki/Triple_Triad"  target="_blank" rel="noopener noreferrer">Click here for more information</a>
       </div>
     )
   }
